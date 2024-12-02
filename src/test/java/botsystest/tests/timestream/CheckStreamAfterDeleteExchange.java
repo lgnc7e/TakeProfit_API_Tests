@@ -16,12 +16,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.testng.Assert.assertTrue;
 
 public class CheckStreamAfterDeleteExchange extends TestBase {
-    //create exchange
-    //create bot
-    //start bot
-    //delete exchange
-    //check stream
-    //delete bot
     Logger logger = LoggerFactory.getLogger(CheckStreamAfterDeleteExchange.class);
     String exchangeId;
     String myBotId;
@@ -29,15 +23,18 @@ public class CheckStreamAfterDeleteExchange extends TestBase {
     @BeforeMethod
     public void beforeMethod() {
         exchangeId = app.createExchange(false);
-        myBotId = app.createBotId("ETHUSDT", "Long", 5, false, false, false, "RSI", 14, "1m", exchangeId);
-
+        myBotId = app.createBotId("ETHUSDT", "Long", 5,
+                false,
+                false,
+                false,
+                "RSI",
+                14,
+                "1m",
+                exchangeId);
     }
 
     @Test
     public void CheckStreamAfterDeleteExchangeTest() {
-        //{
-        //  "status": "Start"
-        //}
         Response respAfterStartBot = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
                 .contentType(ContentType.JSON)
@@ -49,11 +46,9 @@ public class CheckStreamAfterDeleteExchange extends TestBase {
                 .body("status", equalTo("Start"))
                 .extract()
                 .response();
-
         logger.info(respAfterStartBot.asString());
 
         app.deleteExchange(exchangeId);
-
 
         Response response = given()
                 .header("Authorization", "Bearer " + app.TOKEN)
@@ -66,18 +61,12 @@ public class CheckStreamAfterDeleteExchange extends TestBase {
                 .response();
 
         List<String> botIds = response.jsonPath().getList("botId");
-
         assertTrue(!botIds.contains(myBotId), "Bot with ID " + myBotId + " should not be found in the active bots list after stopping it.");
-
-
-
 
     }
 
     @AfterMethod
     public void postCondition(){
         app.deleteOneBot(myBotId);
-
-
     }
 }

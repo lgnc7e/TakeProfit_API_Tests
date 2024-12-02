@@ -21,7 +21,7 @@ public class DeleteBotsTests extends TestBase {
     }
 
     @Test
-    public void botsDeleteSuccessfulTest() {
+    public void botsDeleteSuccessfulPositiveTest() {
         Response response = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
                 .contentType(ContentType.JSON)
@@ -34,7 +34,5 @@ public class DeleteBotsTests extends TestBase {
                 .response();
         logger.info(response.asString());
     }
-
-
 
 }

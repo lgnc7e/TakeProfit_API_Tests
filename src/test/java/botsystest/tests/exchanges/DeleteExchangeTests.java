@@ -14,7 +14,7 @@ public class DeleteExchangeTests extends TestBase {
     Logger logger = LoggerFactory.getLogger(DeleteExchangeTests.class);
 
     @Test
-    public void testDeleteExchange() {
+    public void testDeleteExchangePositive() {
         String exchId = app.createExchange(false);
         Response response = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)

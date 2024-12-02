@@ -16,13 +16,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.testng.Assert.assertTrue;
 
 public class CheckStreamAfterChangeBot extends TestBase {
-    //create exchange
-    //create bot
-    //start bot
-    //change bot
-    //check stream
-    //delete exchange
-    //delete bot
     Logger logger = LoggerFactory.getLogger(CheckStreamAfterChangeBot.class);
     String exchangeId;
     String myBotId;
@@ -35,10 +28,7 @@ public class CheckStreamAfterChangeBot extends TestBase {
     }
 
     @Test
-    public void CheckStreamAfterChangeBotTest() {
-        //{
-        //  "status": "Start"
-        //}
+    public void CheckStreamAfterChangeBotPositiveTest() {
         Response respAfterStartBot = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
                 .contentType(ContentType.JSON)
@@ -92,18 +82,12 @@ public class CheckStreamAfterChangeBot extends TestBase {
                 .response();
 
         List<String> botIds = response.jsonPath().getList("botId");
-
         assertTrue(!botIds.contains(myBotId), "Bot with ID " + myBotId + " should not be found in the active bots list after stopping it.");
-
-
-
-
     }
 
     @AfterMethod
     public void postCondition(){
         app.deleteOneBot(myBotId);
         app.deleteExchange(exchangeId);
-
     }
 }

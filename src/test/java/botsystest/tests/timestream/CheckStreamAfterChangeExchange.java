@@ -16,13 +16,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.testng.Assert.assertTrue;
 
 public class CheckStreamAfterChangeExchange extends TestBase {
-    //create exchange
-    //create bot
-    //start bot
-    //change exchange
-    //check stream
-    //delete exchange
-    //delete bot
     Logger logger = LoggerFactory.getLogger(CheckStreamAfterChangeExchange.class);
     String exchangeId;
     String myBotId;
@@ -35,10 +28,7 @@ public class CheckStreamAfterChangeExchange extends TestBase {
     }
 
     @Test
-    public void CheckStreamAfterChangeExchangeTest() {
-        //{
-        //  "status": "Start"
-        //}
+    public void CheckStreamAfterChangeExchangePositiveTest() {
         Response respAfterStartBot = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
                 .contentType(ContentType.JSON)
@@ -50,7 +40,6 @@ public class CheckStreamAfterChangeExchange extends TestBase {
                 .body("status", equalTo("Start"))
                 .extract()
                 .response();
-
         logger.info(respAfterStartBot.asString());
 
         String requestBodyForChangeExchange = "{\n" +
@@ -60,7 +49,6 @@ public class CheckStreamAfterChangeExchange extends TestBase {
                 "  \"exchange\": \"Binance\",\n" +
                 "  \"isDefault\": false\n" +
                 "}";
-
 
         Response responseAfterChangeExchange = given()
                 .header("Authorization", "Bearer " + app.TOKEN)
@@ -72,8 +60,6 @@ public class CheckStreamAfterChangeExchange extends TestBase {
                 .statusCode(200)
                 .extract()
                 .response();
-
-
         logger.info(responseAfterChangeExchange.asString());
 
         Response response = given()
@@ -87,11 +73,7 @@ public class CheckStreamAfterChangeExchange extends TestBase {
                 .response();
 
         List<String> botIds = response.jsonPath().getList("botId");
-
         assertTrue(!botIds.contains(myBotId), "Bot with ID " + myBotId + " should not be found in the active bots list after stopping it.");
-
-
-
 
     }
 

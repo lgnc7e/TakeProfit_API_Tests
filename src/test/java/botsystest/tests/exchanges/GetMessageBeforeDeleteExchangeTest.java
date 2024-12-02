@@ -18,7 +18,7 @@ public class GetMessageBeforeDeleteExchangeTest extends TestBase {
 
 
     @Test
-    public void testGetExchangeBeforeDeleteNoBots() {
+    public void testGetExchangeBeforePositiveDeleteNoBots() {
       String idExchangeWithoutBots = app.createExchange(false);
         Response response = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
@@ -30,14 +30,13 @@ public class GetMessageBeforeDeleteExchangeTest extends TestBase {
                 .body("message", equalTo("This exchange does not have bots, deletion is safe"))
                 .extract()
                 .response();
-
         app.deleteExchange(idExchangeWithoutBots);
         logger.info(response.asString());
 
     }
 
     @Test
-    public void testGetExchangeBeforeDeleteWithBots() {
+    public void testGetExchangeBeforeDeletePositiveWithBots() {
         String idExchangeWithBots = app.createExchange(true);
         String idBot = app.createBotId("DOGEUSDT", "Long", 5, true, true, true,
                 "RSI", 14, "1m", idExchangeWithBots);
@@ -60,14 +59,5 @@ public class GetMessageBeforeDeleteExchangeTest extends TestBase {
         logger.info(response.asString());
 
     }
-
-
-
-
-
-
-
-
-
 
 }

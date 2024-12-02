@@ -37,10 +37,9 @@ public class CreateSuccessfulBotsTests extends TestBase {
         }
 
     @Test
-    public void botCreateSuccessfulTest() {
-            String exchangeId = app.getIdConnectedExchange()[0];
+    public void botCreatePositiveTest() {
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("exchangeId", exchangeId);
+            requestBody.put("exchangeId", idConnectedExch);
             requestBody.put("tradingPair", tradingPair);
             requestBody.put("type", type);
             requestBody.put("deposit", deposit);
@@ -63,7 +62,7 @@ public class CreateSuccessfulBotsTests extends TestBase {
                     .then()
                     .statusCode(201)
                     .body("id", notNullValue())
-                    .body("exchangeId", equalTo(exchangeId))
+                    .body("exchangeId", equalTo(idConnectedExch))
                     .body("tradingPair", equalTo(tradingPair))
                     .body("type", equalTo(type))
                     .body("deposit", equalTo(deposit))
@@ -81,10 +80,8 @@ public class CreateSuccessfulBotsTests extends TestBase {
         }
 
         @Test
-        public void botCreateSuccessfulDemoTest() {
-
+        public void botCreatePositiveDemoTest() {
                 String exchangeId = app.getIdDemoExchange();
-                // JSON-request
                 Map<String, Object> requestBody = new HashMap<>();
                 requestBody.put("exchangeId", exchangeId);
                 requestBody.put("tradingPair", tradingPair);
@@ -122,7 +119,6 @@ public class CreateSuccessfulBotsTests extends TestBase {
                         .body("indicators[0].interval", equalTo(interval))
                         .extract()
                         .response();
-                // System.out.println(response.getBody().asString());
                 botId = response.jsonPath().getString("id");
                 logger.info(response.asString());
         }
@@ -138,10 +134,6 @@ public class CreateSuccessfulBotsTests extends TestBase {
                 logger.info("Exchange with ID " + idNotConnectedExch + " was deleted.");
                 logger.info("Bot with ID " + botId+ " was deleted.");
         }
-
-
-
-
 
     }
 

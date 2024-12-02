@@ -14,7 +14,7 @@ public class GetBotsTests extends TestBase {
     Logger logger = LoggerFactory.getLogger(GetBotsTests.class);
 
     @Test
-    public void getMyBotsTest() {
+    public void getMyBotsPositiveTest() {
         Response response = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
                 .contentType(ContentType.JSON)
@@ -25,12 +25,11 @@ public class GetBotsTests extends TestBase {
                 .body("size()", greaterThanOrEqualTo(0))
                 .extract()
                 .response();
-        //  System.out.println(response.getBody().asString());
         logger.info(response.body().asString());
     }
 
     @Test
-    public void getOneBotTest() {
+    public void getOneBotPositiveTest() {
         String botId = app.createBotId(
                 "ETHUSDT", "Long", 100, true, true, false, "RSI", 14, "1m", app.getIdDemoExchange()
         );

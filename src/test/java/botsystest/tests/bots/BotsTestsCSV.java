@@ -30,8 +30,8 @@ public class BotsTestsCSV extends TestBase {
 
 
     @Test(dataProvider = "botData3", dataProviderClass = DataProviders.class)
-    public void botCreateSuccessfulShortTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
-        String exchangeId = idConnectedExch; // Берем из @BeforeMethod
+    public void botCreateSuccessfulShortPositiveTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
+        String exchangeId = idConnectedExch;
         String botId = null;
 
         try {
@@ -50,7 +50,6 @@ public class BotsTestsCSV extends TestBase {
             indicatorMap.put("interval", interval);
             requestBody.put("indicators", Collections.singletonList(indicatorMap));
 
-            // Запрос
             Response response = given()
                     .header("Authorization", "Bearer " + app.TOKEN)
                     .contentType(ContentType.JSON)
@@ -66,22 +65,21 @@ public class BotsTestsCSV extends TestBase {
             botId = response.jsonPath().getString("id");
             logger.info("Bot created successfully: " + botId);
             logger.info(response.asString());
-        } finally {
-            if (botId != null) {
-                app.deleteOneBot(botId);
-                logger.info("Deleted bot: " + botId);
-            }
+            app.deleteOneBot(botId);
+            logger.info("Deleted bot immediately: " + botId);
+        } catch (Exception e) {
+            logger.error("Error during bot creation or deletion: " + e.getMessage());
         }
 
     }
 
     @Test(dataProvider = "botData2", dataProviderClass = DataProviders.class)
-    public void botCreateSuccessfulTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
-        String exchangeId = app.getIdDemoExchange(); // Берем из @BeforeMethod
+    public void botCreateSuccessfulPositiveTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
+        String exchangeId = app.getIdDemoExchange();
         String botId = null;
         Response response = null;
         try {
-            // JSON-request
+
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("exchangeId", exchangeId);
             requestBody.put("tradingPair", tradingPair);
@@ -119,11 +117,13 @@ public class BotsTestsCSV extends TestBase {
                     .body("indicators[0].interval", equalTo(interval))
                     .extract()
                     .response();
-        } finally {
-            if (botId != null) {
-                app.deleteOneBot(botId);
-                logger.info("Deleted bot: " + botId);
-            }
+            botId = response.jsonPath().getString("id");
+            logger.info("Bot created successfully: " + botId);
+            logger.info(response.asString());
+            app.deleteOneBot(botId);
+            logger.info("Deleted bot immediately: " + botId);
+        } catch (Exception e) {
+            logger.error("Error during bot creation or deletion: " + e.getMessage());
         }
 
         logger.info(response.asString());
@@ -132,9 +132,8 @@ public class BotsTestsCSV extends TestBase {
 
 
     @Test(dataProvider = "tradingPairs", dataProviderClass = DataProviders.class)
-    public void botCreateUnsuccesfullTestCSV(String tradingPair) {
+    public void botCreateUnsuccesfullNegativeTestCSV(String tradingPair) {
         String exchangeId = app.getIdConnectedExchange()[0];
-        // JSON-request
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("exchangeId", exchangeId);
         requestBody.put("tradingPair", tradingPair);
@@ -163,7 +162,6 @@ public class BotsTestsCSV extends TestBase {
                 .body("message", equalTo("Trading pair "+ tradingPair + " is not available for the specified exchange."))
                 .extract()
                 .response();
-        // System.out.println(response.getBody().asString());
         logger.info(response.asString());
     }
 

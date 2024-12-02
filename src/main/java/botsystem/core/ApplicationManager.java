@@ -15,16 +15,19 @@ import static org.hamcrest.Matchers.equalTo;
 public class ApplicationManager {
     private static final Dotenv dotenv = Dotenv.configure()
             .filename(".env")
+            .ignoreIfMalformed()
+            .ignoreIfMissing()
             .load();
-
-    public static final String apiKeyExchange = dotenv.get("API_KEY_EXCHANGE");
-    public static final String secretExchange = dotenv.get("SECRET_EXCHANGE");
 
     public final String AUTH = "Authorization";
     public String TOKEN;
     Logger logger = LoggerFactory.getLogger(ApplicationManager.class);
-    String emailGetToken = "hannaQa@gmail.com";
-    String passwordGetToken = "Password@2811"; //Password@125
+
+    public final String emailGetToken = System.getProperty("email", dotenv.get("EMAIL_GET_TOKEN"));
+    public final String passwordGetToken = System.getProperty("password", dotenv.get("PASSWORD_GET_TOKEN"));
+    public final String apiKeyExchange = System.getProperty("apiKeyExchange", dotenv.get("API_KEY_EXCHANGE"));
+    public final String secretExchange = System.getProperty("secretExchange", dotenv.get("SECRET_EXCHANGE"));
+
 
     public String getTOKEN() {
         UserRequest userRequest = UserRequest.builder()
@@ -56,12 +59,9 @@ public class ApplicationManager {
                 .response();
         String userEmail = response.jsonPath().getString("email");
         System.out.println("Email: " + userEmail);
-
-
         String fullUserInfo = response.asString();
         System.out.println("Full info: " + fullUserInfo);
         return fullUserInfo;
-
     }
 
     public String[] getIdConnectedExchange() {
@@ -79,12 +79,9 @@ public class ApplicationManager {
         for (Map<String, Object> exchange : exchanges) {
             if (Boolean.TRUE.equals(exchange.get("connect"))) {
                 connectedIds.add((String) exchange.get("id"));
-
             }
         }
-
         return connectedIds.toArray(new String[0]);
-
     }
 
     public String[] getIdNotConnectedExchange() {
@@ -194,11 +191,7 @@ public class ApplicationManager {
         for (Map<String, Object> paarInf : paarInfs) {
             paars.add((String) paarInf.get("symbol"));
         }
-        // System.out.println("user paars " + paars);
-
         return paars.toArray(new String[0]);
-
-
     }
 
     public void deleteExchange(String exchId) {
@@ -216,7 +209,6 @@ public class ApplicationManager {
     }
 
     public String[] getAllBots() {
-
         Response response = given()
                 .header(AUTH, "Bearer " + TOKEN)
                 .contentType(ContentType.JSON)
@@ -308,14 +300,12 @@ public class ApplicationManager {
             String[] allBots = getAllBots();
             boolean botDeleted = false;
             for (String botId : allBots) {
-                // Check to my bot
                 if (!botId.equals(myBot)) {
                     deleteOneBot(botId);
-                    botDeleted = true; // one bot was deleted
-                    break; // for new list
+                    botDeleted = true;
+                    break;
                 }
             }
-            //if bots not deleted
             if (!botDeleted) {
                 break;
             }

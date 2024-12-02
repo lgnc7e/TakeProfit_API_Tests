@@ -13,8 +13,7 @@ public class GetExchangesTests extends TestBase {
     Logger logger = LoggerFactory.getLogger(GetExchangesTests.class);
 
     @Test
-    public void GetExchangeSuccessfulTest() {
-
+    public void GetExchangeSuccessfulPositiveTest() {
         Response response = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
                 .contentType(ContentType.JSON)
@@ -24,15 +23,12 @@ public class GetExchangesTests extends TestBase {
                 .statusCode(200)
                 .extract()
                 .response();
-
-        //  System.out.println(response.getBody().asString());
         logger.info(response.asString());
-
     }
 
 
     @Test
-    public void GetOneExchangeSuccessfulTest() {
+    public void GetOneExchangeSuccessfulPositiveTest() {
         String exchConnId = app.getIdDemoExchange();
         Response response = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
@@ -43,8 +39,6 @@ public class GetExchangesTests extends TestBase {
                 .statusCode(200)
                 .extract()
                 .response();
-
-        //  System.out.println(response.getBody().asString());
         logger.info(response.body().asString());
     }
 }

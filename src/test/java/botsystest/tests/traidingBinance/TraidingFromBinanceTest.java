@@ -12,8 +12,9 @@ import static io.restassured.RestAssured.given;
 
 public class TraidingFromBinanceTest extends TestBase {
     Logger logger = LoggerFactory.getLogger(TraidingFromBinanceTest.class);
+
     @Test
-    public void CandlesTest() {
+    public void CandlesPositiveTest() {
         String requestBody = "{\n" +
                 "  \"interval\": \"1m\",\n" +
                 "  \"period\": 10\n" +
@@ -29,13 +30,12 @@ public class TraidingFromBinanceTest extends TestBase {
                 .statusCode(200)
                 .extract()
                 .response();
-
       logger.info(response.getBody().asString());
     }
 
 
     @Test(dataProvider = "botData", dataProviderClass = DataProviders.class)
-    public void CandlesCSVTest(String interval, String period, String para) {
+    public void CandlesCSVPositiveTest(String interval, String period, String para) {
         String requestBody = "{\n" +
                 "  \"interval\": \"" + interval + "\",\n" +
                 "  \"period\": " + period + "\n" +
@@ -52,7 +52,5 @@ public class TraidingFromBinanceTest extends TestBase {
                 .response();
         logger.info(response.getBody().asString());
     }
-
-
 
 }

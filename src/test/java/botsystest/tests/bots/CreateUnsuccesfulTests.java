@@ -16,7 +16,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 
 public class CreateUnsuccesfulTests extends TestBase {
-    Logger logger = LoggerFactory.getLogger(CreateSuccessfulBotsTests.class);
+    Logger logger = LoggerFactory.getLogger(CreateUnsuccesfulTests.class);
     String tradingPair = "EURUSDT";
     String type = "Short";
     float deposit = 0.08F;
@@ -37,9 +37,8 @@ public class CreateUnsuccesfulTests extends TestBase {
 
 
     @Test
-    public void botCreateUnsuccessfulNotConnectExchTest() {
+    public void botCreateNegativeNotConnectExchTest() {
         String exchangeId = app.getIdNotConnectedExchange()[0];
-        // JSON-request
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("exchangeId", exchangeId);
         requestBody.put("tradingPair", tradingPair);
@@ -66,7 +65,6 @@ public class CreateUnsuccesfulTests extends TestBase {
                 .statusCode(403)
                 .extract()
                 .response();
-        // System.out.println(response.getBody().asString());
         logger.info(response.asString());
     }
 
@@ -78,7 +76,5 @@ public class CreateUnsuccesfulTests extends TestBase {
         logger.info("Exchange with ID " + idNotConnectedExch + " was deleted.");
 
     }
-
-
 
 }

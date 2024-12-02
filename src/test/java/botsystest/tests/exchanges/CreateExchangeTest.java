@@ -20,14 +20,14 @@ public class CreateExchangeTest extends TestBase {
 
 
     @Test
-    public void CreateExchangeSuccessfulTest() {
+    public void CreateExchangePositiveTest() {
         String nameExchange = "19.11";
         Boolean isDefault = false;
         String binance = "Binance";
         String requestBody = "{\n" +
                 "  \"name\": \"" + nameExchange + "\",\n" +
-                "  \"apiKey\": \"" + ApplicationManager.apiKeyExchange + "\",\n" +
-                "  \"secretKey\": \"" + ApplicationManager.secretExchange + "\",\n" +
+                "  \"apiKey\": \"" + app.apiKeyExchange + "\",\n" +
+                "  \"secretKey\": \"" + app.secretExchange + "\",\n" +
                 "  \"exchange\": \"" + binance + "\",\n" +
                 "  \"isDefault\": " + isDefault + "\n" +
                 "}";
@@ -49,24 +49,21 @@ public class CreateExchangeTest extends TestBase {
                 .body("message", equalTo("Connected successfully"))
                 .extract()
                 .response();
-        //System.out.println(response.getBody().asString());
-
         exchangeId = response.jsonPath().getString("id");
         logger.info(response.body().asString());
 
     }
 
     @Test
-    public void CreateExchangeConnectFalseTest() {
+    public void CreateExchangeConnectPositiveFalseTest() {
         String apiKeyInvalid = "pdK1XR6o1AMrPm0zlwp5E8HAvg0cgGb2dWH4wVnxmgc1ev9BXLfwWRFv2Erk4";
-        String secretKeyInvalid = "4OMiRuPGNujFLhJV6g949tWk9KMdU0aliE0n0UC1TgqDJdGEDRK9Z4q1AfUosgTi";
         String nameExchange = "19.11";
         Boolean isDefault = false;
         String binance = "Binance";
         String requestBody = "{\n" +
                 "  \"name\": \"" + nameExchange + "\",\n" +
                 "  \"apiKey\": \"" + apiKeyInvalid + "\",\n" +
-                "  \"secretKey\": \"" + ApplicationManager.secretExchange + "\",\n" +
+                "  \"secretKey\": \"" + app.secretExchange + "\",\n" +
                 "  \"exchange\": \"" + binance + "\",\n" +
                 "  \"isDefault\": " + isDefault + "\n" +
                 "}";
@@ -89,21 +86,19 @@ public class CreateExchangeTest extends TestBase {
                 .extract()
                 .response();
         exchangeId = response.jsonPath().getString("id");
-        //System.out.println(response.getBody().asString());
         logger.info(response.body().asString());
 
     }
 
     @Test
-    public void CreateExchangeConnectFalseTest2() {
-        String apiKeyInvalid = "pdK1XR6o1AMrPm0zlwp5E8HAvg0cgGb2dWH4wVnxmgc1ev9BXLfwWRFv2Erk4";
+    public void CreateExchangeConnectPositiveFalseTest2() {
         String secretKeyInvalid = "4OMiRuPGNujFLhJV6g949tWk9KMdU0aliE0n0UC1TgqDJdGEDRK9Z4q1Af";
         String nameExchange = "19.11";
         Boolean isDefault = false;
         String binance = "Binance";
         String requestBody = "{\n" +
                 "  \"name\": \"" + nameExchange + "\",\n" +
-                "  \"apiKey\": \"" + ApplicationManager.apiKeyExchange + "\",\n" +
+                "  \"apiKey\": \"" + app.apiKeyExchange + "\",\n" +
                 "  \"secretKey\": \"" + secretKeyInvalid + "\",\n" +
                 "  \"exchange\": \"" + binance + "\",\n" +
                 "  \"isDefault\": " + isDefault + "\n" +
@@ -127,7 +122,6 @@ public class CreateExchangeTest extends TestBase {
                 .extract()
                 .response();
         exchangeId = response.jsonPath().getString("id");
-        //System.out.println(response.getBody().asString());
         logger.info(response.body().asString());
 
     }
