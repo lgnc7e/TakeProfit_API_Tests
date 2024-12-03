@@ -86,7 +86,7 @@ jobs:
           allure_history: allure-history
           allure_results: build/allure-results
       - name: ✅ 💻 Publish test report
-        uses: peaceiris/actions-gh-pages@v4.0.0
+        uses: ad-m/github-push-action@master
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
