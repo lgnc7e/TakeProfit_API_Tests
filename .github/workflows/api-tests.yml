@@ -26,18 +26,22 @@ jobs:
       SECRET_EXCHANGE: ${{ secrets.SECRET_EXCHANGE }}
 
     steps:
+      # 1. Проверка репозитория
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # 2. Настройка Java
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '18'
 
+      # 3. Делаем gradlew исполняемым
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
+      # 4. Запуск тестов
       - name: Run Tests
         run: |
           ./gradlew clean ${{ github.event.inputs.testTask }} \
@@ -45,3 +49,23 @@ jobs:
           -Ppassword=$PASSWORD_GET_TOKEN \
           -PapiKeyExchange=$API_KEY_EXCHANGE \
           -PsecretExchange=$SECRET_EXCHANGE
+
+      # 5. Генерация Allure-отчета
+      - name: Generate Allure Report
+        run: ./gradlew allureReport
+
+      # 6. Сохранение результатов в ветку allure-reports
+      - name: Commit and Push Allure Report to `allure-reports` branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git fetch origin allure-reports || echo "Branch allure-reports does not exist. It will be created."
+          git checkout allure-reports || git checkout -b allure-reports
+
+          mkdir -p reports/${{ github.event.inputs.testTask }}/$(date +'%Y%m%d_%H%M%S')  # Уникальная директория с датой
+          cp -r build/reports/allure-report/* reports/${{ github.event.inputs.testTask }}/$(date +'%Y%m%d_%H%M%S')/  # Копируем текущий отчет
+
+          git add .
+          git commit -m "Update Allure Report for ${{ github.event.inputs.testTask }}"
+          git push origin allure-reports
