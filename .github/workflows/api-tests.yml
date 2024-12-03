@@ -47,13 +47,6 @@ jobs:
       # 5. Generate Allure Report
       - name: Generate Allure Report
         run: ./gradlew allureReport
-
-      # 6. Verify Allure Report Exists
-      - name: Check Allure Report
-        run: |
-          if [ ! -d "build/reports/allure-report" ]; then
-            echo "Allure report not found. Ensure the report is generated correctly.";
-            exit 1;
       - name: ✅ 💾 Load previous test report history
         uses: actions/checkout@v4
         if: always()
