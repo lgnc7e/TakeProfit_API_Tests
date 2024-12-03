@@ -63,17 +63,15 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           # Переключаемся на ветку allure-reports, создаём её, если нужно
-          git fetch origin allure-reports || echo "Branch allure-reports does not exist. It will be created."
-          git checkout allure-reports || git checkout -b allure-reports
-
-          # Полностью очищаем ветку от старых данных
-          git rm -rf . || echo "No files to remove"
+          git fetch origin allure-reports
+          git checkout allure-reports
 
           # Создаём уникальную директорию для нового отчёта
-          mkdir -p reports/${{ github.event.inputs.testTask }}/$(date +'%Y%m%d_%H%M%S')
-          cp -r build/reports/allure-report/* reports/${{ github.event.inputs.testTask }}/$(date +'%Y%m%d_%H%M%S')/
+          REPORT_DIR="reports/${{ github.event.inputs.testTask }}/$(date +'%Y%m%d_%H%M%S')"
+          mkdir -p $REPORT_DIR
+          cp -r build/reports/allure-report/* $REPORT_DIR/
 
-          # Добавляем новые отчёты
-          git add .
-          git commit -m "Update Allure Report for ${{ github.event.inputs.testTask }}"
+          # Добавляем и пушим новые отчёты
+          git add $REPORT_DIR
+          git commit -m "Add Allure Report for ${{ github.event.inputs.testTask }}: $(date +'%Y-%m-%d %H:%M:%S')"
           git push origin allure-reports
