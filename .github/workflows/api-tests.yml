@@ -34,7 +34,14 @@ jobs:
       # 3. Make gradlew executable
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
-
+      - name: ❎ ⌛ Check Gradle version
+        run: ./gradlew --version
+      - name: ✅ 🚿 Clean Gradle build
+        run: ./gradlew clean
+      - name: ✅ ⚙️ Install Allure
+        run: npm install -g allure-commandline
+      - name: ❎ ⌛ Check Allure version
+        run: allure --version
       # 4. Run Tests
       - name: Run Tests
         run: |
