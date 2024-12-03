@@ -37,9 +37,13 @@ dependencies {
 
 test {
     useTestNG()
-
     // Указание директории для хранения результатов Allure
-    systemProperty "allure.results.directory", "build/allure-results"
+    // systemProperty "allure.results.directory", "build/allure-results"
+    finalizedBy 'allureReport'
+}
+allureReport {
+    dependsOn test
+    reportDir = file('build/allure-report')
 }
 
 def registerTask(String taskName, String suitePath){
