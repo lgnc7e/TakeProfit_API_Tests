@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'io.qameta.allure' version '2.11.2' // Подключение плагина Allure
 }
 
 group = 'org.example'
@@ -8,6 +9,7 @@ version = '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+
 compileJava.options.encoding = 'UTF-8'
 
 tasks.withType(JavaCompile) {
@@ -28,10 +30,16 @@ dependencies {
     implementation 'org.apache.commons:commons-csv:1.10.0'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.12'
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+    testImplementation 'io.qameta.allure:allure-testng:2.21.0'
+    testImplementation 'io.qameta.allure:allure-rest-assured:2.21.0'
 }
 
 test {
     useTestNG()
+
+    // Указание директории для хранения результатов Allure
+    systemProperty "allure.results.directory", "build/allure-results"
 }
 
 def registerTask(String taskName, String suitePath){
@@ -39,9 +47,8 @@ def registerTask(String taskName, String suitePath){
         useTestNG(){
             suites suitePath
         }
-//        if(project.hasProperty('browser')){
-//            systemProperty 'browser', "${browser}"
-//        }
+        // Указание директории для хранения результатов Allure для каждой задачи
+        systemProperty "allure.results.directory", "build/allure-results"
     }
 }
 
