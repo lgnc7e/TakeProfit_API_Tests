@@ -30,6 +30,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '18'
+      - name: ❎ ⌛ Check Java version
+        run: java -version
+      - name: ❎ ⌛ Check JVM version
+        run: echo $JAVA_HOME
+      - name: ❎ ⌛ Check Java Core version
+        run: javac -version
 
       # 3. Make gradlew executable
       - name: Grant execute permission for Gradle wrapper
