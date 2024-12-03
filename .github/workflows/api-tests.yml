@@ -54,24 +54,24 @@ jobs:
           if [ ! -d "build/reports/allure-report" ]; then
             echo "Allure report not found. Ensure the report is generated correctly.";
             exit 1;
-          fi
-
-      # 7. Commit and Push Allure Report to `allure-reports` branch
-      - name: Commit and Push Allure Report to `allure-reports` branch
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Переключаемся на ветку allure-reports, создаём её, если нужно
-          git fetch origin allure-reports
-          git checkout allure-reports
-
-          # Создаём уникальную директорию для нового отчёта
-          REPORT_DIR="reports/${{ github.event.inputs.testTask }}/$(date +'%Y%m%d_%H%M%S')"
-          mkdir -p $REPORT_DIR
-          cp -r build/reports/allure-report/* $REPORT_DIR/
-
-          # Добавляем и пушим новые отчёты
-          git add $REPORT_DIR
-          git commit -m "Add Allure Report for ${{ github.event.inputs.testTask }}: $(date +'%Y-%m-%d %H:%M:%S')"
-          git push origin allure-reports
+      - name: ✅ 💾 Load previous test report history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+      - name: ✅ 🤖 Build allure report on gh-pages
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: build/allure-results
+      - name: ✅ 💻 Publish test report
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
