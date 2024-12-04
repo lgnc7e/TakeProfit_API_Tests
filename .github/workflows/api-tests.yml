@@ -83,7 +83,7 @@ jobs:
         with:
           name: gradle-results.zip
           path: |
-            build/reports/tests/test/*
+            build/reports/tests/*
 
       - name: ✅ 📦 Archive [Allure attachments for failed tests]
         uses: actions/upload-artifact@v4
