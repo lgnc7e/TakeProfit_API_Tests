@@ -1,6 +1,7 @@
 name: API Tests CI/CD
 
 on:
+  # Ручной запуск с выбором задачи
   workflow_dispatch:
     inputs:
       testTask:
@@ -17,33 +18,95 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
 
+    env:
+      EMAIL_GET_TOKEN: ${{ secrets.EMAIL_GET_TOKEN }}
+      PASSWORD_GET_TOKEN: ${{ secrets.PASSWORD_GET_TOKEN }}
+      API_KEY_EXCHANGE: ${{ secrets.API_KEY_EXCHANGE }}
+      SECRET_EXCHANGE: ${{ secrets.SECRET_EXCHANGE }}
+
     steps:
+      # 1. Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Grant execute permission for Gradle wrapper
-        run: chmod +x gradlew
-
-      - name: Verify Gradle wrapper permissions
-        run: ls -la gradlew
-
-      - name: Print working directory
-        run: pwd
-
+      # 2. Set up Java
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '18'
 
-      - name: Verify TestNG suites
+      - name: Check Java version
+        run: java -version
+      - name: Check JVM version
+        run: echo $JAVA_HOME
+      - name: Check Java Compiler version
+        run: javac -version
+
+      # 3. Make gradlew executable and verify
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Verify Gradle wrapper permissions
+        run: ls -la gradlew
+
+      - name: Check Gradle version
+        run: ./gradlew --version
+
+      # 4. Verify TestNG suites
+      - name: Check Test Suites
         run: ls -la src/test/resources/suites/
 
-      - name: Run Tests with Debug Logs
-        run: ./gradlew ${{ github.event.inputs.testTask }} --info --stacktrace
+      # 5. Run selected test task
+      - name: Print selected test task
+        run: echo "Selected test task:${{ github.event.inputs.testTask }}"
 
-      - name: Archive Logs
+      - name: Run Tests
+        run: |
+          echo "Executing Gradle command: ./gradlew ${{ github.event.inputs.testTask }} ..."
+          ./gradlew ${{ github.event.inputs.testTask }} \
+            -Pemail=$EMAIL_GET_TOKEN \
+            -Ppassword=$PASSWORD_GET_TOKEN \
+            -PapiKeyExchange=$API_KEY_EXCHANGE \
+            -PsecretExchange=$SECRET_EXCHANGE > build.log 2>&1 || true
+
+      # 6. Archive logs and test results
+      - name: Archive [Gradle build log]
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: gradle-build-log.zip
           path: build.log
+
+      - name: Archive [Test Results]
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gradle-results.zip
+          path: |
+            build/reports/tests/test/*
+
+      - name: Archive [Allure attachments for failed tests]
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-attachments-for-failed-tests.zip
+          path: |
+            src/test_logs/*
+
+      # 7. Generate and publish Allure report
+      - name: Build Allure report on gh-pages
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: build/allure-results
+
+      - name: Publish Allure report
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
