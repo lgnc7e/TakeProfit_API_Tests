@@ -56,9 +56,8 @@ jobs:
       - name: ❎ ⌛ Check Allure version
         run: allure --version
 
-      # 4. Run Tests
-      - name: Run Tests smoke
-       # if: ${{ github.event.inputs.deployment_target == 'smoke' }}
+      - name: Run Smoke Tests
+        if: ${{ inputs.testTask == 'smoke' }}
         run: |
           ./gradlew clean smoke \
           -Pemail=$EMAIL_GET_TOKEN \
@@ -66,7 +65,16 @@ jobs:
           -PapiKeyExchange=$API_KEY_EXCHANGE \
           -PsecretExchange=$SECRET_EXCHANGE \
           clean build > build.log 2>&1 || true
-
+      - name: Run Regressive Tests
+        if: ${{ inputs.testTask == 'regressive' }}
+        run: |
+          ./gradlew clean regressive \
+          -Pemail=$EMAIL_GET_TOKEN \
+          -Ppassword=$PASSWORD_GET_TOKEN \
+          -PapiKeyExchange=$API_KEY_EXCHANGE \
+          -PsecretExchange=$SECRET_EXCHANGE \
+          clean build > build.log 2>&1 || true
+          
       - name: ✅ 📦 Archive [Gradle build log]
         uses: actions/upload-artifact@v4
         if: always()
