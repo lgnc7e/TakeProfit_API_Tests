@@ -43,6 +43,7 @@ public class CheckStreamAfterDeleteBot extends TestBase {
                 .response();
         logger.info(respAfterStartBot.asString());
 
+        app.changeBotStatus(myBotId, "Stop");
         app.deleteOneBot(myBotId);
 
         Response response = given()
