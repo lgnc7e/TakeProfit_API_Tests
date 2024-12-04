@@ -70,15 +70,14 @@ jobs:
             -PapiKeyExchange=$API_KEY_EXCHANGE \
             -PsecretExchange=$SECRET_EXCHANGE > build.log 2>&1 || true
 
-      # 6. Archive logs and test results
-      - name: Archive [Gradle build log]
+      - name: ✅ 📦 Archive [Gradle build log]
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: gradle-build-log.zip
           path: build.log
 
-      - name: Archive [Test Results]
+      - name: ✅ 📦 Archive [test results]
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -86,14 +85,14 @@ jobs:
           path: |
             build/reports/tests/test/*
 
-      - name: Archive [Allure attachments for failed tests]
+      - name: ✅ 📦 Archive [Allure attachments for failed tests]
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: allure-attachments-for-failed-tests.zip
+          name: allure-attachments for failed tests.zip
           path: |
             src/test_logs/*
-
+            
       # 7. Generate and publish Allure report
       - name: Build Allure report on gh-pages
         uses: simple-elf/allure-report-action@v1.7
