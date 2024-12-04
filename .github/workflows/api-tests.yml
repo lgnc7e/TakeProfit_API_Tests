@@ -13,8 +13,8 @@ on:
         default: 'smoke'
         type: choice
         options:
-          - smoke
-          - regressive
+          - 'smoke'
+          - 'regressive'
 jobs:
   run-tests:
     name: Run Tests
@@ -58,9 +58,9 @@ jobs:
 
       # 4. Run Tests
       - name: Run Tests smoke
-        if: 
+        if: ${{ github.event.inputs.deployment_target == 'smoke' }}
         run: |
-          ./gradlew clean ${{ github.event.inputs.testTask || 'smoke' }} \
+          ./gradlew clean smoke \
           -Pemail=$EMAIL_GET_TOKEN \
           -Ppassword=$PASSWORD_GET_TOKEN \
           -PapiKeyExchange=$API_KEY_EXCHANGE \
