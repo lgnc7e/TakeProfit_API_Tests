@@ -324,9 +324,8 @@ public class ApplicationManager {
             String interval,
             String exchangeId
     ) {
-        String[] userPaar = getUserPaar(); // usersPaar
+        String[] userPaar = getUserPaar();
         int availablePairs = userPaar.length;
-        // quantity of bots
         int botsToCreate = Math.min(numberOfBots, availablePairs);
         System.out.println("Quantity of bots: " + botsToCreate);
         List<String> botsIds = new ArrayList<>();
@@ -350,6 +349,28 @@ public class ApplicationManager {
         for (String id : botsIds) {
             System.out.println(id);
         }
+    }
+
+    public String changeBotStatus(String botId, String status) {
+        if (!status.equals("Start") && !status.equals("Stop")) {
+            throw new IllegalArgumentException("Invalid status: " + status + ". Allowed values are 'Start' or 'Stop'.");
+        }
+        logger.info("Changing bot status. Bot ID: {}, Status: {}", botId, status);
+        Response response = given()
+                .header(AUTH, "Bearer " + TOKEN)
+                .contentType(ContentType.JSON)
+                .body("{ \"status\": \"" + status + "\" }")
+                .when()
+                .patch( "bots/" + botId + "/status")
+                .then()
+                .statusCode(200)
+                .body("status", equalTo(status))
+                .extract()
+                .response();
+        logger.info("Response for bot ID {}: {}", botId, response.asString());
+        String botIdFromResponse = response.jsonPath().getString("id");
+        String statusFromResponse = response.jsonPath().getString("status");
+        return String.format("%s\n%s", botIdFromResponse, statusFromResponse);
     }
 
 
