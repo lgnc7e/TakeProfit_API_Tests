@@ -58,7 +58,7 @@ jobs:
 
       # 4. Run Tests
       - name: Run Tests smoke
-        if: ${{ github.event.inputs.deployment_target == 'smoke' }}
+        if: 
         run: |
           ./gradlew clean ${{ github.event.inputs.testTask || 'smoke' }} \
           -Pemail=$EMAIL_GET_TOKEN \
