@@ -58,8 +58,11 @@ jobs:
         
       - name: Check Test Suites
         run: ls -la src/test/resources/suites/
+      - name: Print testTask variable
+        run: echo "testTask value:${{ github.event.inputs.testTask }}"
       - name: Run Tests
         run: |
+          echo "Executing Gradle command: ./gradlew clean $${{ github.event.inputs.testTask }} ..."
           ./gradlew clean $${{ github.event.inputs.testTask }} \
             -Pemail=$EMAIL_GET_TOKEN \
             -Ppassword=$PASSWORD_GET_TOKEN \
