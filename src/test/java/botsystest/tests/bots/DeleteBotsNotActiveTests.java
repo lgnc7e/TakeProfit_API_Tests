@@ -11,13 +11,14 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-public class DeleteBotsTests extends TestBase {
-    Logger logger = LoggerFactory.getLogger(DeleteBotsTests.class);
+public class DeleteBotsNotActiveTests extends TestBase {
+    Logger logger = LoggerFactory.getLogger(DeleteBotsNotActiveTests.class);
     String botId;
 
     @BeforeMethod
     public void preConditions() {
        botId = app.createBotId("ETHUSDT", "Long", 100, true, true, false, "RSI", 14, "1m", app.getIdDemoExchange());
+
     }
 
     @Test
