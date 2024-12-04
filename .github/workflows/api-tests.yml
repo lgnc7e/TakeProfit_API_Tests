@@ -58,24 +58,14 @@ jobs:
         
       - name: Check Test Suites
         run: ls -la src/test/resources/suites/
-      - name: Run Smoke Tests
-        if: github.event.inputs.testTask == 'smoke'
+      - name: Run Tests
         run: |
-          ./gradlew clean smoke \
-          -Pemail=$EMAIL_GET_TOKEN \
-          -Ppassword=$PASSWORD_GET_TOKEN \
-          -PapiKeyExchange=$API_KEY_EXCHANGE \
-          -PsecretExchange=$SECRET_EXCHANGE \
-          clean build > build.log 2>&1 || true
-      - name: Run Regressive Tests
-        if: github.event.inputs.testTask == 'regressive'
-        run: |
-          ./gradlew clean regressive \
-          -Pemail=$EMAIL_GET_TOKEN \
-          -Ppassword=$PASSWORD_GET_TOKEN \
-          -PapiKeyExchange=$API_KEY_EXCHANGE \
-          -PsecretExchange=$SECRET_EXCHANGE \
-          clean build > build.log 2>&1 || true
+          ./gradlew clean $${{ github.event.inputs.testTask }} \
+            -Pemail=$EMAIL_GET_TOKEN \
+            -Ppassword=$PASSWORD_GET_TOKEN \
+            -PapiKeyExchange=$API_KEY_EXCHANGE \
+            -PsecretExchange=$SECRET_EXCHANGE \
+            clean build > build.log 2>&1 || true
           
       - name: ✅ 📦 Archive [Gradle build log]
         uses: actions/upload-artifact@v4
