@@ -1,9 +1,6 @@
 name: API Tests CI/CD
 
 on:
-  # Автоматический запуск для smoke при обновлении main
-  # push:
-  #   branches: [main]
   # Ручной запуск с выбором задачи
   workflow_dispatch:
     inputs:
@@ -57,17 +54,18 @@ jobs:
       - name: ❎ ⌛ Check Allure version
         run: allure --version
 
-      # 4. Run Tests
-      - name: Run Tests smoke
-        if: ${{ github.event.inputs.deployment_target == 'smoke' }}
+      # 4. Run specific tests based on input
+      - name: Run Tests
         run: |
-          ./gradlew clean ${{ github.event.inputs.testTask || 'smoke' }} \
+          # Запускать только тесты, связанные с выбранной задачей
+          ./gradlew clean test${{ github.event.inputs.testTask.capitalize() }} \
           -Pemail=$EMAIL_GET_TOKEN \
           -Ppassword=$PASSWORD_GET_TOKEN \
           -PapiKeyExchange=$API_KEY_EXCHANGE \
           -PsecretExchange=$SECRET_EXCHANGE \
-          clean build > build.log 2>&1 || true
+          > build.log 2>&1 || true
 
+      # 5. Archive build log
       - name: ✅ 📦 Archive [Gradle build log]
         uses: actions/upload-artifact@v4
         if: always()
@@ -75,6 +73,7 @@ jobs:
           name: gradle-build-log.zip
           path: build.log
 
+      # 6. Archive test results
       - name: ✅ 📦 Archive [test results]
         uses: actions/upload-artifact@v4
         if: always()
@@ -83,6 +82,7 @@ jobs:
           path: |
             build/reports/tests/test/*
 
+      # 7. Archive Allure attachments for failed tests
       - name: ✅ 📦 Archive [Allure attachments for failed tests]
         uses: actions/upload-artifact@v4
         if: always()
@@ -91,6 +91,7 @@ jobs:
           path: |
             src/test_logs/*
 
+      # 8. Build Allure report
       - name: ✅ 🤖 Build allure report on gh-pages
         uses: simple-elf/allure-report-action@v1.7
         if: always()
@@ -99,6 +100,7 @@ jobs:
           allure_history: allure-history
           allure_results: build/allure-results
 
+      # 9. Publish test report
       - name: ✅ 💻 Publish test report
         uses: peaceiris/actions-gh-pages@v4.0.0
         if: always()
