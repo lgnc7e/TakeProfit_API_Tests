@@ -8,6 +8,11 @@
                     <include name=".*Positive.*"/>
                 </methods>
             </class>
+            <class name="botsystest.tests.bots.CreateUnsuccesfulTests">
+                <methods>
+                    <include name=".*Negative.*"/>
+                </methods>
+            </class>
             <class name="botsystest.tests.bots.DeleteActiveBotTests">
                 <methods>
                     <include name=".*Negative.*"/>
@@ -18,12 +23,47 @@
                     <include name=".*Positive.*"/>
                 </methods>
             </class>
+            <class name="botsystest.tests.bots.GetBotsTests">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
+            <class name="botsystest.tests.exchanges.CreateExchangeTest">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
+            <class name="botsystest.tests.exchanges.DeleteExchangeTests">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
+            <class name="botsystest.tests.exchanges.GetMessageBeforeDeleteExchangeTest">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
             <class name="botsystest.tests.timestream.CheckStreamAfterChangeBot">
                 <methods>
                     <include name=".*Positive.*"/>
                 </methods>
             </class>
+            <class name="botsystest.tests.timestream.CheckStreamAfterChangeExchange">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
             <class name="botsystest.tests.timestream.CheckStreamAfterDeleteBot">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
+            <class name="botsystest.tests.timestream.CheckStreamAfterDeleteExchange">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
+            <class name="botsystest.tests.traidingBinance.TraidingFromBinanceTest">
                 <methods>
                     <include name=".*Positive.*"/>
                 </methods>
