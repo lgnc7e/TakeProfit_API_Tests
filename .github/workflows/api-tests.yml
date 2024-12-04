@@ -1,12 +1,21 @@
 name: API Tests CI/CD
 
 on:
+  # Автоматический запуск для smoke при обновлении main
+  push:
+    branches:
+      - main
+
+  # Ручной запуск с выбором задачи
   workflow_dispatch:
     inputs:
       testTask:
         description: 'Test task to run (smoke or regressive)'
         required: true
         default: 'smoke'
+        options:
+          - smoke
+          - regressive
 
 jobs:
   run-tests:
@@ -48,22 +57,24 @@ jobs:
         run: npm install -g allure-commandline
       - name: ❎ ⌛ Check Allure version
         run: allure --version
+
       # 4. Run Tests
       - name: Run Tests
         run: |
-          ./gradlew clean ${{ github.event.inputs.testTask }} \
+          ./gradlew clean ${{ github.event.inputs.testTask || 'smoke' }} \
           -Pemail=$EMAIL_GET_TOKEN \
           -Ppassword=$PASSWORD_GET_TOKEN \
           -PapiKeyExchange=$API_KEY_EXCHANGE \
           -PsecretExchange=$SECRET_EXCHANGE \
           clean build > build.log 2>&1 || true
-          
+
       - name: ✅ 📦 Archive [Gradle build log]
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: gradle-build-log.zip
           path: build.log
+
       - name: ✅ 📦 Archive [test results]
         uses: actions/upload-artifact@v4
         if: always()
@@ -71,6 +82,7 @@ jobs:
           name: gradle-results.zip
           path: |
             build/reports/tests/test/*
+
       - name: ✅ 📦 Archive [Allure attachments for failed tests]
         uses: actions/upload-artifact@v4
         if: always()
@@ -78,6 +90,7 @@ jobs:
           name: allure-attachments for failed tests.zip
           path: |
             src/test_logs/*
+
       - name: ✅ 🤖 Build allure report on gh-pages
         uses: simple-elf/allure-report-action@v1.7
         if: always()
@@ -85,6 +98,7 @@ jobs:
           gh_pages: gh-pages
           allure_history: allure-history
           allure_results: build/allure-results
+
       - name: ✅ 💻 Publish test report
         uses: peaceiris/actions-gh-pages@v4.0.0
         if: always()
