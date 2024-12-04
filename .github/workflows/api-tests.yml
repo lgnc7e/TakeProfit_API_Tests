@@ -3,9 +3,7 @@ name: API Tests CI/CD
 on:
   # Автоматический запуск для smoke при обновлении main
   push:
-    branches:
-      - main
-
+    branches: [main]
   # Ручной запуск с выбором задачи
   workflow_dispatch:
     inputs:
@@ -13,6 +11,7 @@ on:
         description: 'Test task to run (smoke or regressive)'
         required: true
         default: 'smoke'
+        type: choice
         options:
           - smoke
           - regressive
