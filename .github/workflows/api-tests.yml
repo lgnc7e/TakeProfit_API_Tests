@@ -1,9 +1,6 @@
 name: API Tests CI/CD
 
 on:
-  # Автоматический запуск для smoke при обновлении main
-  push:
-    branches: [main]
   # Ручной запуск с выбором задачи
   workflow_dispatch:
     inputs:
@@ -13,8 +10,8 @@ on:
         default: 'smoke'
         type: choice
         options:
-          - smoke
-          - regressive
+          - 'smoke'
+          - 'regressive'
 
 jobs:
   run-tests:
@@ -38,43 +35,50 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '18'
-      - name: ❎ ⌛ Check Java version
+
+      - name: Check Java version
         run: java -version
-      - name: ❎ ⌛ Check JVM version
+      - name: Check JVM version
         run: echo $JAVA_HOME
-      - name: ❎ ⌛ Check Java Core version
+      - name: Check Java Compiler version
         run: javac -version
 
-      # 3. Make gradlew executable
+      # 3. Make gradlew executable and verify
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
-      - name: ❎ ⌛ Check Gradle version
-        run: ./gradlew --version
-      - name: ✅ 🚿 Clean Gradle build
-        run: ./gradlew clean
-      - name: ✅ ⚙️ Install Allure
-        run: npm install -g allure-commandline
-      - name: ❎ ⌛ Check Allure version
-        run: allure --version
 
-      # 4. Run Tests
+      - name: Verify Gradle wrapper permissions
+        run: ls -la gradlew
+
+      - name: Check Gradle version
+        run: ./gradlew --version
+
+      # 4. Verify TestNG suites
+      - name: Check Test Suites
+        run: ls -la src/test/resources/suites/
+
+      # 5. Run selected test task
+      - name: Print selected test task
+        run: echo "Selected test task:${{ github.event.inputs.testTask }}"
+
       - name: Run Tests
         run: |
-          ./gradlew clean ${{ github.event.inputs.testTask || 'smoke' }} \
-          -Pemail=$EMAIL_GET_TOKEN \
-          -Ppassword=$PASSWORD_GET_TOKEN \
-          -PapiKeyExchange=$API_KEY_EXCHANGE \
-          -PsecretExchange=$SECRET_EXCHANGE \
-          clean build > build.log 2>&1 || true
+          echo "Executing Gradle command: ./gradlew ${{ github.event.inputs.testTask }} ..."
+          ./gradlew ${{ github.event.inputs.testTask }} \
+            -Pemail=$EMAIL_GET_TOKEN \
+            -Ppassword=$PASSWORD_GET_TOKEN \
+            -PapiKeyExchange=$API_KEY_EXCHANGE \
+            -PsecretExchange=$SECRET_EXCHANGE > build.log 2>&1 || true
 
-      - name: ✅ 📦 Archive [Gradle build log]
+      # 6. Archive logs and test results
+      - name: Archive [Gradle build log]
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: gradle-build-log.zip
           path: build.log
 
-      - name: ✅ 📦 Archive [test results]
+      - name: Archive [Test Results]
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -82,15 +86,16 @@ jobs:
           path: |
             build/reports/tests/test/*
 
-      - name: ✅ 📦 Archive [Allure attachments for failed tests]
+      - name: Archive [Allure attachments for failed tests]
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: allure-attachments for failed tests.zip
+          name: allure-attachments-for-failed-tests.zip
           path: |
             src/test_logs/*
 
-      - name: ✅ 🤖 Build allure report on gh-pages
+      # 7. Generate and publish Allure report
+      - name: Build Allure report on gh-pages
         uses: simple-elf/allure-report-action@v1.7
         if: always()
         with:
@@ -98,7 +103,7 @@ jobs:
           allure_history: allure-history
           allure_results: build/allure-results
 
-      - name: ✅ 💻 Publish test report
+      - name: Publish Allure report
         uses: peaceiris/actions-gh-pages@v4.0.0
         if: always()
         with:
