@@ -111,12 +111,10 @@ jobs:
       - name: Move Allure History to Unique Directory
         run: mv allure-history $TEST_RUN_DIR
 
-      - name: Publish Allure report
+      - name: ✅ 💻 Publish test report
         uses: peaceiris/actions-gh-pages@v4.0.0
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: .
-          keep_files: true
-          enable_jekyll: false
+          publish_dir: allure-history
