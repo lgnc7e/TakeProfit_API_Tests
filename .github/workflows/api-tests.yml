@@ -96,7 +96,7 @@ jobs:
           path: |
             src/test_logs/*
             
-      # 7. Generate and publish Allure report
+     # 7. Generate and publish Allure report
       - name: Build Allure report on gh-pages
         uses: simple-elf/allure-report-action@v1.7
         if: always()
@@ -105,13 +105,7 @@ jobs:
           allure_history: allure-history
           allure_results: build/allure-results
 
-      - name: Set Test Run Directory
-        run: echo "TEST_RUN_DIR=run-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
-
-      - name: Move Allure History to Unique Directory
-        run: mv allure-history $TEST_RUN_DIR
-
-      - name: ✅ 💻 Publish test report
+      - name: Publish Allure report
         uses: peaceiris/actions-gh-pages@v4.0.0
         if: always()
         with:
