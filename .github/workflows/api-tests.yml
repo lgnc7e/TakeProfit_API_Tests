@@ -60,7 +60,13 @@ jobs:
         run: ls -la src/test/resources/suites/
       - name: Run Smoke Tests
         if: github.event.inputs.command == 'smoke'
-        run: ./gradlew clean smoke -Pemail=$EMAIL_GET_TOKEN -Ppassword=$PASSWORD_GET_TOKEN -PapiKeyExchange=$API_KEY_EXCHANGE -PsecretExchange=$SECRET_EXCHANGE clean build > build.log 2>&1 || true
+        run: |
+          ./gradlew clean smoke \
+          -Pemail=$EMAIL_GET_TOKEN \
+          -Ppassword=$PASSWORD_GET_TOKEN \
+          -PapiKeyExchange=$API_KEY_EXCHANGE \
+          -PsecretExchange=$SECRET_EXCHANGE \
+          clean build > build.log 2>&1 || true
       - name: Run Regressive Tests
         if: github.event.inputs.command == 'regressive'
         run: |
