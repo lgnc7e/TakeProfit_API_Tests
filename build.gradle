@@ -58,3 +58,4 @@ def registerTask(String taskName, String suitePath){
 
 registerTask('smoke','src/test/resources/suites/smoke.xml')
 registerTask('bots','src/test/resources/suites/regressive.xml')
+
