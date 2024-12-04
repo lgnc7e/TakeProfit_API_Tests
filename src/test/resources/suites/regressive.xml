@@ -18,6 +18,16 @@
                     <include name=".*Positive.*"/>
                 </methods>
             </class>
+            <class name="botsystest.tests.timestream.CheckStreamAfterChangeBot">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
+            <class name="botsystest.tests.timestream.CheckStreamAfterDeleteBot">
+                <methods>
+                    <include name=".*Positive.*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 </suite>
