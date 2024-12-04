@@ -2,8 +2,8 @@ name: API Tests CI/CD
 
 on:
   # Автоматический запуск для smoke при обновлении main
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   # Ручной запуск с выбором задачи
   workflow_dispatch:
     inputs:
@@ -58,7 +58,8 @@ jobs:
         run: allure --version
 
       # 4. Run Tests
-      - name: Run Tests
+      - name: Run Tests smoke
+        if: ${{ github.event.inputs.deployment_target == 'smoke' }}
         run: |
           ./gradlew clean ${{ github.event.inputs.testTask || 'smoke' }} \
           -Pemail=$EMAIL_GET_TOKEN \
