@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       testTask:
-        description: 'Test task to run (smoke or bots)'
+        description: 'Test task to run (smoke or regressive)'
         required: true
         default: 'smoke'
 
