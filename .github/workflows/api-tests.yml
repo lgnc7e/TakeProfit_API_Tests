@@ -1,6 +1,9 @@
 name: API Tests CI/CD
 
 on:
+# Автоматический запуск для smoke при обновлении main
+  push:
+    branches: [main]
   # Ручной запуск с выбором задачи
   workflow_dispatch:
     inputs:
@@ -102,10 +105,18 @@ jobs:
           allure_history: allure-history
           allure_results: build/allure-results
 
+      - name: Set Test Run Directory
+        run: echo "TEST_RUN_DIR=run-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
+
+      - name: Move Allure History to Unique Directory
+        run: mv allure-history $TEST_RUN_DIR
+
       - name: Publish Allure report
         uses: peaceiris/actions-gh-pages@v4.0.0
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: .
+          keep_files: true
+          enable_jekyll: false
