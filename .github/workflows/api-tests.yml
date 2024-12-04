@@ -17,43 +17,31 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
 
-    env:
-      EMAIL_GET_TOKEN: ${{ secrets.EMAIL_GET_TOKEN }}
-      PASSWORD_GET_TOKEN: ${{ secrets.PASSWORD_GET_TOKEN }}
-      API_KEY_EXCHANGE: ${{ secrets.API_KEY_EXCHANGE }}
-      SECRET_EXCHANGE: ${{ secrets.SECRET_EXCHANGE }}
-
     steps:
-      # Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Set up Java
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Verify Gradle wrapper permissions
+        run: ls -la gradlew
+
+      - name: Print working directory
+        run: pwd
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '18'
 
-      # Verify TestNG suites
       - name: Verify TestNG suites
         run: ls -la src/test/resources/suites/
 
-      # List Gradle tasks
-      - name: List Gradle Tasks
-        run: ./gradlew tasks
+      - name: Run Tests with Debug Logs
+        run: ./gradlew ${{ github.event.inputs.testTask }} --info --stacktrace
 
-      # Run Selected Task
-      - name: Run Tests
-        run: |
-          echo "Running selected task: ${{ github.event.inputs.testTask }}"
-          ./gradlew ${{ github.event.inputs.testTask }} \
-            -Pemail=$EMAIL_GET_TOKEN \
-            -Ppassword=$PASSWORD_GET_TOKEN \
-            -PapiKeyExchange=$API_KEY_EXCHANGE \
-            -PsecretExchange=$SECRET_EXCHANGE
-
-      # Archive Logs and Results
       - name: Archive Logs
         uses: actions/upload-artifact@v4
         with:
