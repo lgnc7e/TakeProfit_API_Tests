@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.11.2' // Подключение плагина Allure
+    id 'io.qameta.allure' version '2.11.2'
 }
 
 group = 'org.example'
@@ -37,7 +37,7 @@ dependencies {
 
 test {
     useTestNG()
-    // Указание директории для хранения результатов Allure
+
     // systemProperty "allure.results.directory", "build/allure-results"
     finalizedBy 'allureReport'
 }
@@ -57,4 +57,4 @@ def registerTask(String taskName, String suitePath){
 }
 
 registerTask('smoke','src/test/resources/suites/smoke.xml')
-registerTask('bots','src/test/resources/suites/bots.xml')
+registerTask('bots','src/test/resources/suites/regressive.xml')
