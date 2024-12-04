@@ -30,7 +30,7 @@ public class BotsTestsCSV extends TestBase {
 
 
     @Test(dataProvider = "botData3", dataProviderClass = DataProviders.class)
-    public void botCreateSuccessfulShortPositiveTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
+    public void botCreateShortPositiveTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
         String exchangeId = idConnectedExch;
         String botId = null;
 
@@ -74,7 +74,7 @@ public class BotsTestsCSV extends TestBase {
     }
 
     @Test(dataProvider = "botData2", dataProviderClass = DataProviders.class)
-    public void botCreateSuccessfulPositiveTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
+    public void botCreatePositiveTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
         String exchangeId = app.getIdDemoExchange();
         String botId = null;
         Response response = null;
@@ -132,7 +132,7 @@ public class BotsTestsCSV extends TestBase {
 
 
     @Test(dataProvider = "tradingPairs", dataProviderClass = DataProviders.class)
-    public void botCreateUnsuccesfullNegativeTestCSV(String tradingPair) {
+    public void botCreateNegativeTestCSV(String tradingPair) {
         String exchangeId = app.getIdConnectedExchange()[0];
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("exchangeId", exchangeId);
