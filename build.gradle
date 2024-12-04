@@ -51,7 +51,7 @@ def registerTask(String taskName, String suitePath){
         useTestNG(){
             suites suitePath
         }
-        // Указание директории для хранения результатов Allure для каждой задачи
+
         systemProperty "allure.results.directory", "build/allure-results"
     }
 }

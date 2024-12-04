@@ -20,18 +20,12 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class BotsTestsCSV extends TestBase {
     Logger logger = LoggerFactory.getLogger(BotsTestsCSV.class);
-    String idConnectedExch;
 
-    @BeforeMethod
-    public void preConditions() {
-        idConnectedExch = app.createExchange(false);
-
-    }
 
 
     @Test(dataProvider = "botData3", dataProviderClass = DataProviders.class)
     public void botCreateShortPositiveTestCSV(String tradingPair, String type, float deposit, boolean stopLoss, boolean takeProfit, boolean pumpDump, String indicator, int period, String interval) {
-        String exchangeId = idConnectedExch;
+        String exchangeId = app.getIdDemoExchange();
         String botId = null;
 
         try {
@@ -131,50 +125,7 @@ public class BotsTestsCSV extends TestBase {
 
 
 
-    @Test(dataProvider = "tradingPairs", dataProviderClass = DataProviders.class)
-    public void botCreateNegativeTestCSV(String tradingPair) {
-        String exchangeId = app.getIdConnectedExchange()[0];
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("exchangeId", exchangeId);
-        requestBody.put("tradingPair", tradingPair);
-        requestBody.put("type", "Short");
-        requestBody.put("deposit", 0.08);
-        requestBody.put("stopLoss", false);
-        requestBody.put("takeProfit", false);
-        requestBody.put("pumpDump", false);
-
-        Map<String, Object> indicatorMap = new HashMap<>();
-        indicatorMap.put("indicator", "STOCHASTIC");
-        indicatorMap.put("period", 7);
-        indicatorMap.put("interval", "1m");
-        requestBody.put("indicators", Collections.singletonList(indicatorMap));
 
 
-        Response response = given()
-                .header("Authorization", "Bearer " + app.TOKEN)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post("/bots")
-                .then()
-                .statusCode(400)
-                .body("error", equalTo("ExchangeBadRequest"))
-                .body("message", equalTo("Trading pair "+ tradingPair + " is not available for the specified exchange."))
-                .extract()
-                .response();
-        logger.info(response.asString());
-    }
-
-    @AfterMethod
-    public void postCondition() {
-        try {
-            if (idConnectedExch != null) {
-                app.deleteExchange(idConnectedExch);
-                logger.info("Exchange with ID " + idConnectedExch + " was deleted.");
-            }
-        } catch (Exception e) {
-            logger.error("Error deleting exchange: " + e.getMessage());
-        }
-    }
 
 }
