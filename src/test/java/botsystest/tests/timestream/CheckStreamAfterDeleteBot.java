@@ -24,7 +24,7 @@ public class CheckStreamAfterDeleteBot extends TestBase {
     @BeforeMethod
     public void beforeMethod() {
         exchangeId = app.createExchange(false);
-        myBotId = app.createBotId("ETHUSDT", "Long", 5, false, false, false, "RSI", 14, "1m", exchangeId);
+        myBotId = app.createBotId("ETHUSDT", "Long", 1, false, false, false, "RSI", 14, "1m", exchangeId);
 
     }
 
@@ -57,6 +57,7 @@ public class CheckStreamAfterDeleteBot extends TestBase {
                 .response();
         List<String> botIds = response.jsonPath().getList("botId");
         assertTrue(!botIds.contains(myBotId), "Bot with ID " + myBotId + " should not be found in the active bots list after stopping it.");
+        logger.info(String.valueOf(!botIds.contains(myBotId)) );
     }
 
     @AfterMethod

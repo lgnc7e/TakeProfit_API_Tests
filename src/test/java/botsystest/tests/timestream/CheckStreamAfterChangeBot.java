@@ -23,7 +23,7 @@ public class CheckStreamAfterChangeBot extends TestBase {
     @BeforeMethod
     public void beforeMethod() {
         exchangeId = app.createExchange(false);
-        myBotId = app.createBotId("ETHUSDT", "Long", 5, false, false, false, "RSI", 14, "1m", exchangeId);
+        myBotId = app.createBotId("ETHUSDT", "Long", 1, false, false, false, "RSI", 14, "1m", exchangeId);
 
     }
 
@@ -44,7 +44,7 @@ public class CheckStreamAfterChangeBot extends TestBase {
         logger.info(respAfterStartBot.asString());
 
         String requestBodyForUpdate = "{\n" +
-                "  \"deposit\": 5,\n" +
+                "  \"deposit\": 1,\n" +
                 "  \"stopLoss\": true,\n" +
                 "  \"takeProfit\": true,\n" +
                 "  \"pumpDump\": true,\n" +
@@ -64,8 +64,8 @@ public class CheckStreamAfterChangeBot extends TestBase {
                 .when()
                 .patch("bots/" + myBotId)
                 .then()
-                .statusCode(200)
-                .body("status", equalTo("Stop"))
+                .statusCode(400)
+                .body("message", equalTo("Unable to change running bot"))
                 .extract()
                 .response();
 
@@ -82,11 +82,24 @@ public class CheckStreamAfterChangeBot extends TestBase {
                 .response();
 
         List<String> botIds = response.jsonPath().getList("botId");
-        assertTrue(!botIds.contains(myBotId), "Bot with ID " + myBotId + " should not be found in the active bots list after stopping it.");
+       assertTrue(botIds.contains(myBotId), "Bot with ID " + myBotId + " should  be found in the active bots list after stopping it.");
+        logger.info(String.valueOf(botIds.contains(myBotId)));
     }
 
     @AfterMethod
     public void postCondition(){
+        Response respAfterStartBot = given()
+                .header(app.AUTH, "Bearer " + app.TOKEN)
+                .contentType(ContentType.JSON)
+                .body("{ \"status\": \"Stop\" }")
+                .when()
+                .patch("bots/" + myBotId + "/status")
+                .then()
+                .statusCode(200)
+                .body("status", equalTo("Stop"))
+                .extract()
+                .response();
+        logger.info(respAfterStartBot.asString());
         app.deleteOneBot(myBotId);
         app.deleteExchange(exchangeId);
     }

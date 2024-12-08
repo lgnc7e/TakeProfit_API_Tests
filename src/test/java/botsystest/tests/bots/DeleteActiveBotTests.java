@@ -20,7 +20,7 @@ public class DeleteActiveBotTests extends TestBase {
     @BeforeMethod
     public void preConditions() {
         idConnectedExch = app.createExchange(true);
-        idRunningBot = app.createBotId("ETHUSDT", "Long", 5, true, true, false, "RSI", 14, "1m", idConnectedExch);
+        idRunningBot = app.createBotId("ETHUSDT", "Long", 1, true, true, false, "RSI", 14, "1m", idConnectedExch);
 
     }
 

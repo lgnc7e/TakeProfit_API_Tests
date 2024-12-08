@@ -23,7 +23,7 @@ public class CheckStreamAfterDeleteExchange extends TestBase {
     @BeforeMethod
     public void beforeMethod() {
         exchangeId = app.createExchange(false);
-        myBotId = app.createBotId("ETHUSDT", "Long", 5,
+        myBotId = app.createBotId("ETHUSDT", "Long", 1,
                 false,
                 false,
                 false,
@@ -34,7 +34,7 @@ public class CheckStreamAfterDeleteExchange extends TestBase {
     }
 
     @Test
-    public void CheckStreamAfterDeleteExchangeTest() {
+    public void CheckStreamAfterDeletePositiveExchangeTest() {
         Response respAfterStartBot = given()
                 .header(app.AUTH, "Bearer " + app.TOKEN)
                 .contentType(ContentType.JSON)
