@@ -1,0 +1,5 @@
+14013 [Test worker] INFO  b.tests.bots.CreateUnsuccesfulTests -- {"error":"FORBIDDEN","message":"Exchange is not connected."}
+14412 [Test worker] INFO  botsystem.core.ApplicationManager -- {"id":"67559f25923f7f6d5469bc8c","usedId":"6747a3f63bcb7f0ed4612be6","name":"NewExchange","type":"real","exchange":"Binance","isDefault":false,"connect":true,"message":"Connected successfully"}
+14631 [Test worker] INFO  botsystem.core.ApplicationManager -- {"id":"67559f26923f7f6d5469bc8d","usedId":"6747a3f63bcb7f0ed4612be6","name":"NewExchange","type":"real","exchange":"Binance","isDefault":true,"connect":false,"message":"Error while checking API status: {\"code\":-2008,\"msg\":\"Invalid Api-Key ID.\"}"}
+14634 [Test worker] INFO  b.tests.bots.CreateUnsuccesfulTests -- Exchange with ID 67559f25923f7f6d5469bc8c was deleted.
+14634 [Test worker] INFO  b.tests.bots.CreateUnsuccesfulTests -- Exchange with ID 67559f26923f7f6d5469bc8d was deleted.

@@ -38,7 +38,7 @@ public class GetMessageBeforeDeleteExchangeTest extends TestBase {
     @Test
     public void testGetExchangeBeforeDeletePositiveWithBots() {
         String idExchangeWithBots = app.createExchange(true);
-        String idBot = app.createBotId("DOGEUSDT", "Long", 5, true, true, true,
+        String idBot = app.createBotId("DOGEUSDT", "Long", 1, true, true, true,
                 "RSI", 14, "1m", idExchangeWithBots);
 
         Response response = given()
