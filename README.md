@@ -42,6 +42,7 @@ implementation 'ch.qos.logback:logback-classic:1.5.12'  // For logging
 **Environment Variables**
 For secure API key management, the .env file is used to store sensitive information. It is loaded via the dotenv-java library.
 
+
 **Steps to Set Up:**
 Create a .env file in the project root directory and add your API keys:
 
